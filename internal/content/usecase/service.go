@@ -140,10 +140,22 @@ func (s *Service) GetProgress(userID string) (map[string]any, error) {
 	if err != nil {
 		return nil, err
 	}
+	// Convert completed topics (topics with lessons completed) to array
+	completedTopics := make(map[string]bool)
+	for _, lessonID := range user.CompletedLessons {
+		if lesson, err := s.contentRepo.GetLesson(lessonID); err == nil {
+			completedTopics[lesson.TopicID] = true
+		}
+	}
+	completedTopicList := make([]string, 0)
+	for topicID := range completedTopics {
+		completedTopicList = append(completedTopicList, topicID)
+	}
 	return map[string]any{
 		"user_id":           user.ID,
 		"completed_lessons": user.CompletedLessons,
-		"topic_progress":    user.Progress,
+		"completed_topics":  completedTopicList,
+		"progress":          user.Progress,
 		"assessment":        user.Assessment,
 		"total_points":      user.TotalPoints,
 	}, nil

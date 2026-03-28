@@ -36,7 +36,7 @@ func (h *HTTPHandler) GetLesson(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusNotFound, err.Error())
 		return
 	}
-	writeJSON(w, http.StatusOK, lesson)
+	writeJSON(w, http.StatusOK, map[string]any{"lesson": lesson})
 }
 
 func (h *HTTPHandler) SubmitAssessment(w http.ResponseWriter, r *http.Request) {
